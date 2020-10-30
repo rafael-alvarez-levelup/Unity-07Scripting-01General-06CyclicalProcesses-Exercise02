@@ -1,3 +1,5 @@
+**FECHA DE ENTREGA 06/11/2020**
+
 **Requisitos:**
 - Unity 2020.x.
 - Visual Studio.
