@@ -1,75 +1,82 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// This class scales a game object through interpolation.
+/// </summary>
 public class ObjectScaler : MonoBehaviour
 {
-    [SerializeField]
-    private int _loops;
+    #region Private Variables
 
-    [SerializeField]
-    private float _scaleMultiplier;
+    [SerializeField] private int loops = 3;
+    [SerializeField] private float scaleMultiplier = 2;
+    [SerializeField] private float transition = 1;
+    [SerializeField] private float checkInterval = 0.1f;
 
-    [SerializeField]
-    private float _transition;
+    private PointsMovement pointsMovement;
+    private bool scale;
+    private Vector3 currentValue;
+    private float transitionStep;
+    private int steps;
+    private float direction = 1;
 
-    private PointsMovement _pointsMovement;
+    #endregion
 
-    private bool _scale;
-
-    private Vector3 _currentValue;
-
-    private float _transitionStep;
-
-    private int _steps;
-
-    private float _direction = 1;
+    #region Unity Methods
 
     private void Awake()
     {
-        _pointsMovement = GetComponent<PointsMovement>();
+        pointsMovement = GetComponent<PointsMovement>();
     }
 
     private void Start()
     {
-        _currentValue = transform.localScale;
+        scale = false;
+        currentValue = transform.localScale;
+        transitionStep = 0;
+        steps = 0;
 
-        _transitionStep = 0;
-
-        _steps = 0;
-
-        _scale = false;
+        StartCoroutine(ObjectScalerRoutine());
     }
 
-    void Update()
+    #endregion
+
+    #region Coroutines
+
+    private IEnumerator ObjectScalerRoutine()
     {
-        if (_pointsMovement.Loops % _loops == 0)
+        while (true)
         {
-            _scale = true;
-        }
-
-        if (_scale && _steps < 1)
-        {
-
-            _transitionStep += _direction * Time.deltaTime;
-
-            float step = Math.Min(_transitionStep / _transition, 1);
-
-            transform.localScale = Vector3.Lerp(_currentValue, _currentValue * _scaleMultiplier, step);
-
-            if (step >= 1)
+            if (pointsMovement.Loops % loops == 0)
             {
-                _direction = -_direction;
+                scale = true;
             }
-            else if (step <= 0)
+
+            if (scale && steps < 1)
             {
-                _direction = -_direction;
+                transitionStep += direction * checkInterval;
 
-                _scale = false;
+                float step = Math.Min(transitionStep / transition, 1);
 
-                _transitionStep = 0;
+                transform.localScale = Vector3.Lerp(currentValue, currentValue * scaleMultiplier, step);
 
-                _steps = 0;
+                if (step >= 1)
+                {
+                    direction = -direction;
+                }
+                else if (step <= 0)
+                {
+                    direction = -direction;
+                    scale = false;
+                    transitionStep = 0;
+                    steps = 0;
+                }
             }
+
+            yield return new WaitForSeconds(checkInterval);
         }
     }
+
+    #endregion
 }

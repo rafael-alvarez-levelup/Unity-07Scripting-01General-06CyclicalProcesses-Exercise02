@@ -162,6 +162,7 @@ MonoBehaviour:
   - {r: 0, g: 0.7320928, b: 0.9811321, a: 1}
   - {r: 0.88987577, g: 1, b: 0, a: 1}
   _transition: 2
+  checkInterval: 0.1
 --- !u!135 &128114826
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -232,7 +233,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 128114824}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -4, y: 0, z: 0}
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 0}
@@ -255,6 +256,7 @@ MonoBehaviour:
   - {x: 0, y: 4, z: 0}
   - {x: -4, y: 0, z: 0}
   _transition: 2
+  checkInterval: 0.1
 --- !u!114 &128114831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -267,9 +269,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c74e0b5be168404996fdf4137d730f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _loops: 3
-  _scaleMultiplier: 2
-  _transition: 1
+  loops: 3
+  scaleMultiplier: 2
+  transition: 1
+  checkInterval: 0.1
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
