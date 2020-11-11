@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// View Exercise 1
+
 public class PointsMovement : MonoBehaviour
 {
     public int Loops { get; private set; }
@@ -11,8 +13,6 @@ public class PointsMovement : MonoBehaviour
 
     [SerializeField]
     private float _transition = 2f;
-
-    [SerializeField] private float checkInterval = 0.1f;
 
     private Vector3 _currentValue;
 
@@ -39,7 +39,7 @@ public class PointsMovement : MonoBehaviour
         {
             if (_transition > _transitionStep)
             {
-                _transitionStep += checkInterval;
+                _transitionStep += Time.deltaTime;
 
                 float step = _transitionStep / _transition;
 
@@ -56,7 +56,7 @@ public class PointsMovement : MonoBehaviour
                 Loops++;
             }
 
-            yield return new WaitForSeconds(checkInterval);
+            yield return null;
         }
     }
 }

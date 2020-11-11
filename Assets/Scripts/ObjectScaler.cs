@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -7,19 +6,14 @@ using UnityEngine;
 /// </summary>
 public class ObjectScaler : MonoBehaviour
 {
-    #region Private Variables
+    #region Private Fields
 
     [SerializeField] private int loops = 3;
     [SerializeField] private float scaleMultiplier = 2;
     [SerializeField] private float transition = 1;
-    [SerializeField] private float checkInterval = 0.1f;
 
     private PointsMovement pointsMovement;
-    private bool scale;
-    private Vector3 currentValue;
-    private float transitionStep;
-    private int steps;
-    private float direction = 1;
+    private int currentLoop;
 
     #endregion
 
@@ -32,49 +26,48 @@ public class ObjectScaler : MonoBehaviour
 
     private void Start()
     {
-        scale = false;
-        currentValue = transform.localScale;
-        transitionStep = 0;
-        steps = 0;
+        currentLoop = 0;
 
-        StartCoroutine(ObjectScalerRoutine());
+        StartCoroutine(CheckRoutine());
     }
 
     #endregion
 
     #region Coroutines
 
-    private IEnumerator ObjectScalerRoutine()
+    private IEnumerator CheckRoutine()
     {
-        while (true)
+        yield return new WaitUntil(() => pointsMovement.Loops - currentLoop >= loops);
+
+        yield return StartCoroutine(PingPongRoutine());
+
+        currentLoop = pointsMovement.Loops;
+
+        StartCoroutine(CheckRoutine());
+    }
+
+    private IEnumerator PingPongRoutine()
+    {
+        Vector3 current = transform.localScale;
+        Vector3 next = current * scaleMultiplier;
+
+        yield return StartCoroutine(TransitionRoutine(current, next));
+        yield return StartCoroutine(TransitionRoutine(next, current));
+    }
+
+    private IEnumerator TransitionRoutine(Vector3 current, Vector3 next)
+    {
+        float transitionStep = 0;
+
+        while (transition > transitionStep)
         {
-            if (pointsMovement.Loops % loops == 0)
-            {
-                scale = true;
-            }
+            transitionStep += Time.deltaTime;
 
-            if (scale && steps < 1)
-            {
-                transitionStep += direction * checkInterval;
+            float step = transitionStep / transition;
 
-                float step = Math.Min(transitionStep / transition, 1);
+            transform.localScale = Vector3.Lerp(current, next, step);
 
-                transform.localScale = Vector3.Lerp(currentValue, currentValue * scaleMultiplier, step);
-
-                if (step >= 1)
-                {
-                    direction = -direction;
-                }
-                else if (step <= 0)
-                {
-                    direction = -direction;
-                    scale = false;
-                    transitionStep = 0;
-                    steps = 0;
-                }
-            }
-
-            yield return new WaitForSeconds(checkInterval);
+            yield return null;
         }
     }
 

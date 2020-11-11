@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// View Exercise 1
+
 public class ChangeColor : MonoBehaviour
 {
     public int Loops { get; private set; }
@@ -11,8 +13,6 @@ public class ChangeColor : MonoBehaviour
 
     [SerializeField]
     private float _transition = 2f;
-
-    [SerializeField] private float checkInterval = 0.1f;
 
     private float _transitionStep;
 
@@ -46,7 +46,7 @@ public class ChangeColor : MonoBehaviour
         {
             if (_transition > _transitionStep)
             {
-                _transitionStep += checkInterval;
+                _transitionStep += Time.deltaTime;
 
                 float step = _transitionStep / _transition;
 
@@ -63,7 +63,7 @@ public class ChangeColor : MonoBehaviour
                 Loops++;
             }
 
-            yield return new WaitForSeconds(checkInterval);
+            yield return null;
         }
     }
 }
